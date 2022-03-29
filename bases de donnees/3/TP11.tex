@@ -1,0 +1,43 @@
+\documentclass[12pt]
+{report}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+
+\definecolor{blue}{rgb}{0,0,1}
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{green}{rgb}{0,1,0}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+\begin{document}
+% Entete
+\pagestyle{fancy}
+\lhead{Joao Quinta}
+\rhead{17.03.2020}
+\chead{\textbf{Base de données}}
+
+\begin{center}
+	\section*{\textbf{TP11}}
+\end{center}
+\bigskip
+
+\subparagraph*{\textbf{(Q1)}} \textbf{SQL>} \textbf{SELECT} date$\_$entree \textbf{FROM} canton \textbf{WHERE} nom$\_$c='geneve';
+
+\subparagraph*{\textbf{(Q2)}} \textbf{SQL>} \textbf{SELECT} chefs-lieux \textbf{FROM} canton;
+
+\subparagraph*{\textbf{(Q3)}} \textbf{SQL>} \textbf{SELECT} nom$\_$c \textbf{FROM} canton \textbf{WHERE} 1799 < date$\_$entree \textbf{AND} date$\_$entree < 1901;
+
+\subparagraph*{\textbf{(Q4)}} \textbf{SQL>} \textbf{SELECT} distinct langue$\_$parle \textbf{FROM} langue;
+
+
+\subparagraph*{\textbf{(Q5)}} \textbf{SQL>} \textbf{SELECT} * \textbf{FROM} langue;
+
+\subparagraph*{\textbf{(Q6)}} \textbf{SQL>} \textbf{SELECT} nom$\_$canton \textbf{FROM} langue \textbf{WHERE} langue$\_$parle='francais';
+
+\subparagraph*{\textbf{(Q7)}} \textbf{SQL>} \textbf{SELECT} nom$\_$c \textbf{FROM} canton, langue \textbf{WHERE} nom$\_$canton=nom$\_$c; \textbf{AND} date$\_$entree>1799 \textbf{AND} langue$\_$parle='francais';
+
+\end{document}
+

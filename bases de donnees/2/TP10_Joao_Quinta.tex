@@ -1,0 +1,79 @@
+\documentclass[12pt]
+{report}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{fancyhdr}
+
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+\begin{document}
+% Entete
+\pagestyle{fancy}
+\lhead{Joao Quinta}
+\rhead{10.03.2020}
+\chead{\textbf{Bases de données}}
+
+\begin{center}
+	\section*{\textbf{TP10}}
+\end{center}
+\bigskip
+
+% Exo 1
+\paragraph*{\textbf{Exercice 1:}}
+
+\subparagraph*{\textbf{(Q1)}}
+\begin{center}
+$\Pi$ {\scriptsize titre, année, réalisateur, durée} ( \tab\tab\tab\tab\tab\tab\tab\tab
+\\$\sigma$ {\scriptsize (pays = France)} (Film) )
+\end{center}
+
+\subparagraph*{\textbf{(Q2)}}
+\begin{center}
+$\Pi$ {\scriptsize année} ( \tab\tab\tab\tab\tab\tab\tab\tab
+\\$\sigma$ {\scriptsize (nom\_réalisateur = Christopher Nolan)} (Film) )
+\end{center}
+
+\subparagraph*{\textbf{(Q3)}} \textbf{! Je comprends "qui ont tourné avec" comme voulant dire, les acteurs qui ont joué dans un film que <Christopher Nolan> a réalisé !}
+\begin{center}
+$\Pi$ {\scriptsize nom\_acteur}(\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab 
+\\$\sigma$ {\scriptsize (nom\_réalisateur = Christopher Nolan)} ( \tab\tab\tab\tab\tab\tab\tab
+\\ \tab Film $\bowtie$  {\scriptsize (titre = titre) $\wedge$ (année = année)} (Casting) ) )
+\end{center}
+
+\subparagraph*{\textbf{(Q4)}} \textbf{! Je comprends "qui ont joué avec" comme voulant dire, les acteurs qui ont joué dans un film où <Christian Bale> a aussi joué !}
+
+\begin{center}
+$\Pi$ {\scriptsize nom\_acteur}(\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab
+\\($\Pi$ {\scriptsize année, titre}( $\sigma$ {\scriptsize (nom\_acteur = Christian Bale)} (Casting) ) )
+\\ \tab\tab $\bowtie$  {\scriptsize (titre = titre) $\wedge$ (année = année)} 
+\\ \tab\tab ( $\sigma$ {\scriptsize (nom\_acteur != Christian Bale)} (Casting) ) )
+\end{center}
+
+\subparagraph*{\textbf{(Q5)}}
+\begin{center}
+$\Pi$ {\scriptsize titre}(\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab
+\\Film $\bowtie$ {\scriptsize ((nom\_réalisateur = nom\_acteur) $\wedge$ (titre = titre) $\wedge$ (année = année))} (Casting) )
+\end{center}
+
+\subparagraph*{\textbf{(Q6)}}
+\begin{center}
+$\Pi$ {\scriptsize nom\_réalisateur} ( \tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab
+\\ Film $\bowtie$ {\scriptsize (nom\_réalisateur = nom\_acteur) $\wedge$ $\neg$ ( (année = année) $\wedge$ (titre = titre) )} (Casting) )
+\end{center}
+
+\subparagraph*{\textbf{(Q7)}} 
+\begin{center}
+$\Pi$ {\scriptsize titre}( \tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab
+\\Casting $\bowtie$ {\scriptsize (titre = titre) $\wedge$ (année = année) $\wedge$ $\neg$(nom\_acteur = nom\_réalisateur)} (Film) )
+\end{center}
+
+\subparagraph*{\textbf{(Q8)}}
+\begin{center}
+$\Pi$ {\scriptsize titre}(\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab\tab
+\\ ( $\sigma$ {\scriptsize (année >= (date naissance + 60) )}  ( Casting )  \tab\tab\tab\tab\tab\tab
+\\  $\bowtie$ {\scriptsize (nom\_acteur = nom) } (Acteur) ) )
+\end{center}
+	
+\end{document}
