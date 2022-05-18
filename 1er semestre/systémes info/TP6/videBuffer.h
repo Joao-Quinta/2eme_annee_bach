@@ -1,0 +1,1 @@
+void viderBuffer(char* buffer);

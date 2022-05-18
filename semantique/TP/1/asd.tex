@@ -1,0 +1,202 @@
+\documentclass[12pt]
+{report}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+
+\definecolor{blue}{rgb}{0,0,1}
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{green}{rgb}{1,0,1}
+\newcommand\tab[1][1cm]{\hspace*{#1}}
+
+\begin{document}
+% Entete
+\pagestyle{fancy}
+\lhead{Joao Quinta}
+\rhead{16.03.2020}
+\chead{\textbf{Semantique}}
+
+\begin{center}
+	\section*{\textbf{TP1}}
+\end{center}
+\bigskip
+\paragraph*{\textbf{Exercice 1:}}
+\subparagraph*{\textbf{.1)}}
+
+\begin{flushleft}
+\tab Voici comment sont organisées les salles :\tab\tab 
+\begin{tabular}{|c|c|c|c|}
+\hline
+1 & 2 & 3 & 4\\
+\hline
+5 & 6 & 7 & 8\\
+\hline
+9 & 10 & 11 & 12\\
+\hline
+13 & 14 & 15 & 16\\
+\hline
+\end{tabular}
+\end{flushleft}
+\tab\textbf{porte(2,1)} $\rightarrow$ veut dire qu'il existe une porte qui va de la salle 2 à la salle 1.
+\\ \tab Chaque porte est défini comme ça au début du fichier .pl. \\ 
+
+\subparagraph*{\textbf{.2)}} Dans la salle (1) (haut à gauche), il existe une sortie, qui est défini comme \textbf{sortie(1)} dans le fichier .pl, toute sortie, entree et minotaure seront défini ainsi.  
+
+
+\bigskip
+\paragraph*{\textbf{Exercice 2:}}
+\subparagraph*{\textbf{.1)}} Règle \textbf{chemin(De,Vers)} return true si le chemin depuis De à Vers existe, false sinon.
+\\ \tab \textbf{chemin(X,X).} règle de base, qui dit qu'il existe un chemin de X à X \textbf{(De = Vers)}.
+\\ \tab Si \textbf{De != Vers}, alors on "demande" à prolog s'il existe une porte sortante de \textbf{De}, avec la commande \textbf{porte(De, X)}, cette commande retourne dans \textbf{X} toute salle accessible depuis \textbf{De}. Ensuite nous appelons récursivement en remplacent \textbf{De} par le \textbf{X} trouvé, la logique, est de plutôt que calculer/chercher, un chemin de \textbf{De} à \textbf{Vers}, on cherche s'il existe une porte de \textbf{De} à \textbf{X}, et ensuite un chemin de \textbf{X} à \textbf{Vers}.
+
+
+\subparagraph*{\textbf{.2)}} Règle \textbf{itineraire(De,Vers,Pieces)}, retourne dans \textbf{Pieces}  une liste des salles à parcourir pour aller de \textbf{De} à \textbf{Vers} (si le chemin existe).
+\\ \tab La logique appliqué dans cette règle est la même que dans \textbf{chemin(De,Vers)}. 
+\\ \tab \textbf{chemin(X,X,[X]).} règle de base, quand \textbf{De = Vers}, alors on retourne sous forme de liste, l'élément \textbf{De}.
+\\
+\\ \tab On initialise le backtracking pour construire la liste, vu que la valeur \textbf{Vers} est déjà dans la liste, du à la règle de base. Du coup j'ai fait un \textbf{(if -> then; else)} qui vérifie qu'on est pas dans l'étape ou \textbf{X = Vers}, si: \\ \tab \textbf{X != Vers} $\rightarrow$ on concatène la liste précédente avec \textbf{[X]}. \\ \tab \textbf{X = Vers} alors on concatène une liste vide à la liste précédente, car cette liste précédente est exactement \textbf{[X]}.
+\\ 
+\begin{center}
+\textbf{{\large !!!}}
+\end{center}
+\tab Par exemple, pour \textbf{itineraire(3,1,Pieces) $\rightarrow$ Pieces = [3, 2,1]}, veut dire qu'en partant de la salle 3, on prend la porte vers la salle 2, et ensuite pour la salle 1.
+\begin{center}
+\textbf{{\large !!!}}
+\end{center}
+
+\paragraph*{\textbf{Exercice 3:}}
+\subparagraph*{\textbf{.1)}} La règle \textbf{batterie(Pieces,Batterie,Reste)} retourne dans \textbf{Reste} la batterie restante après avoir parcourue les salles dans \textbf{Pieces}. Cette règle est très simple, elle calcule la taille de la liste \textbf{Pieces} et soustrait cette valeur à \textbf{Batterie}. Par contre, si il n'y a pas assez de batterie pour parcourir toutes les salles, la règle retourne \textbf{false}.
+\\ \tab Mon code retourne un résultat attendu lors que je tente la règle \\ \textbf{test$\_$batterie(De,Vers,Batterie,Reste)}.
+
+
+\subparagraph*{\textbf{.2)}} La règle \textbf{chemin$\_$batterie(De,Vers,Batterie,Pieces,Reste)} retourne dans \textbf{Pieces} un chemin qui va de \textbf{De} à \textbf{Vers}, elle utilise donc la règle \textbf{itineraire(De,Vers,Pieces)} définie avant dans le TP, ensuite avec la liste \textbf{Pieces} elle utilise la règle \textbf{batterie(Pieces,Batterie,Reste)} pour savoir si ce chemin \textbf{Pieces} est réalisable avec la \textbf{Batterie} à disposition. La règle \textbf{batterie(Pieces,Batterie,Reste)} retourne déjà \textbf{false} si le chemin n'est pas réalisable, donc je n'ai pas besoin de faire d'autres changements.
+
+\subparagraph*{\textbf{.3)}}La règle \textbf{chemin$\_$reussite(Batterie,Pieces)}, cherche les sorties, entrees et le minotaure avec les commandes \textbf{entree(X), sortie(Y) et minotaure(Z)} respectivement, ensite on utilise la règle \\ \textbf{chemin$\_$batterie(X,Y,Batterie,Pieces,Reste)}, qui nous rend tous les chemins possibles de \textbf{X} à \textbf{Y} avec la \textbf{Batterie} disponible, ensuite avec la règle prédéfinie \textbf{member(Z,Pieces)}, on trie les chemins qui contiennent l'enplacement du Minotaure(\textbf{Z}).
+
+
+\paragraph*{\textbf{Exercice 4:}}
+\subparagraph*{\textbf{.1.1)}} La règle \textbf{reussite$\_$complete(Batterie,Pieces)}, cherche les sorties, entrees et le minotaure avec les commandes \textbf{entree(X), sortie(Y) et minotaure(Z)} respectivement, ensuite un appel à la règle \textbf{itineraire(X,Y,Pieces)} qui retourne un chemin dans \textbf{Pieces} qui va de \textbf{X} à \textbf{Y}, ensuite on vérifie si dans ce chemin il y a la salle \textbf{Z} (minotaure):
+\\ \tab Si \textbf{oui} $\rightarrow$ on utilise la règle \textbf{batterie(Pieces,Batterie,Reste)}, sauf que ici la valeur dans \textbf{Batterie} vaut \textbf{Batterie = Batterie - 5 (énergie lumière) - 2 (énergie tweet)}.
+\\ \tab Si \textbf{non} $\rightarrow$ on retourne \textbf{false}, car le chemin dans \textbf{Pieces} ne permet pas de battre le minotaure.
+\\ \\ \tab Oui, il est possible de vaincre le Minotaure, tweeter et sortir du labyrinthe avec une batterie de 15. (J'ai aussi pris en compte 5 de énergie pour la lumière).
+\\ \\ \tab Légende: \textcolor{red}{salles visités} | \textcolor{blue}{sortie/entree} | \textcolor{green}{Minotaure}
+\\ \\ \tab Pour une \textbf{Batterie = 14}, les chemins suivants sont possibles:
+
+\begin{center}
+
+\begin{tabular}{|ccccccc|}
+\hline
+1 & & 2 & & 3 & & 4 \\
+&&&&&& \\
+5 & & \textcolor{red}{6} &$\rightarrow$& \textcolor{green}{7} & & 8 \\
+&&$\uparrow$&&$\downarrow$&& \\
+\textcolor{red}{9} &$\rightarrow$& \textcolor{red}{10} & & \textcolor{blue}{11} & & 12 \\
+$\uparrow$&&&&&& \\
+\textcolor{blue}{13} & & 14 & & 15 & & 16 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|ccccccc|}
+\hline
+\textcolor{blue}{1} &$\leftarrow$ & \textcolor{red}{2} &$\leftarrow$ & \textcolor{red}{3} & & 4 \\
+&&&&$\uparrow$&& \\
+5 & & \textcolor{red}{6} &$\rightarrow$& \textcolor{green}{7} & & 8 \\
+&&$\uparrow$&&&& \\
+\textcolor{red}{9} &$\rightarrow$& \textcolor{red}{10} & & 11 & & 12 \\
+$\uparrow$&&&&&& \\
+\textcolor{blue}{13} & & 14 & & 15 & & 16 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|ccccccc|}
+\hline
+1 & & 2 & & 3 &  & 4 \\
+&&&&&& \\
+5 & & \textcolor{red}{6} &$\rightarrow$& \textcolor{green}{7} &  & 8 \\
+&&$\uparrow$&&$\downarrow$&& \\
+9 & & \textcolor{red}{10} & & \textcolor{blue}{11} &  & 12 \\
+&&$\uparrow$&&&& \\
+13 & & \textcolor{red}{14} &$\leftarrow$& \textcolor{red}{15} &$\leftarrow$& \textcolor{blue}{16} \\
+\hline
+\end{tabular}
+\end{center}
+
+
+\subparagraph*{}
+\tab Pour une \textbf{Batterie = 15}, les chemins suivants sont possibles (les chemins \textbf{Batterie = 14} sont inclus):\\
+
+\begin{center}
+\begin{tabular}{|ccccccc|}
+\hline
+\textcolor{blue}{1} &$\leftarrow$ & \textcolor{red}{2} &$\leftarrow$ & \textcolor{red}{3} & & 4 \\
+&&&&$\uparrow$&& \\
+5 & & \textcolor{red}{6} &$\rightarrow$& \textcolor{green}{7} &  & 8 \\
+&&$\uparrow$&&&& \\
+9 & & \textcolor{red}{10} & & 11 &  & 12 \\
+&&$\uparrow$&&&& \\
+13 & & \textcolor{red}{14} &$\leftarrow$& \textcolor{red}{15} &$\leftarrow$& \textcolor{blue}{16} \\
+\hline
+\end{tabular}
+\end{center}
+
+
+
+
+
+\subparagraph*{}
+\tab Pour une \textbf{Batterie = 16}, les chemins suivants sont possibles (les chemins \textbf{Batterie = 14 et 15} sont inclus):\\
+
+\begin{center}
+\begin{tabular}{|ccccccc|}
+\hline
+\textcolor{blue}{1} &$\leftarrow$ & \textcolor{red}{2} &$\leftarrow$ & \textcolor{red}{3} &$\leftarrow$& \textcolor{red}{4} \\
+&&&&&&$\uparrow$ \\
+5 & & \textcolor{red}{6} &$\rightarrow$& \textcolor{green}{7} &$\rightarrow$& \textcolor{red}{8} \\
+&&$\uparrow$&&&& \\
+\textcolor{red}{9} &$\rightarrow$& \textcolor{red}{10} & & 11 & & 12 \\
+$\uparrow$&&&&&& \\
+\textcolor{blue}{13} & & 14 & & 15 & & 16 \\
+\hline
+\end{tabular}
+\end{center}
+\subparagraph*{\textbf{.2)}}Pour cette règle on fait exactement comme avant, pour trouver entree, sortie etc, la seule chose qui change, c'est qu'il faut modifier la règle \textbf{batterie(Pieces,Batterie,Reste)}, j'ai donc fait la règle \\ \textbf{batterie$\_$tweet(Pieces,Batterie,Reste)}, qui plutôt que les chemins qui ont un reste de énergie positive, elle accepte que les chemins qui donnent de l'énergie positive.
+\\ \\ \tab L'appel \textbf{reussite$\_$tweet(15,Pieces)}, on a les résultats suivants:
+\\ \\ \tab (X -> symbolise le chemin no réalisable). 
+
+\begin{center}
+\begin{tabular}{|ccccccc|}
+\hline
+\textcolor{blue}{1} & \textbf{X} & \textcolor{red}{2} &$\leftarrow$ & \textcolor{red}{3} &$\leftarrow$& \textcolor{red}{4} \\
+&&&&&&$\uparrow$ \\
+5 & & \textcolor{red}{6} &$\rightarrow$& \textcolor{green}{7} &$\rightarrow$& \textcolor{red}{8} \\
+&&$\uparrow$&&&& \\
+\textcolor{red}{9} &$\rightarrow$& \textcolor{red}{10} & & 11 & & 12 \\
+$\uparrow$&&&&&& \\
+\textcolor{blue}{13} & & 14 & & 15 & & 16 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{|ccccccc|}
+\hline
+\textcolor{blue}{1} &\textbf{X} & 2 &\textbf{X} & \textcolor{red}{3} &$\leftarrow$ & \textcolor{red}{3} \\
+&&&&&&$\uparrow$ \\
+5 & & \textcolor{red}{6} &$\rightarrow$& \textcolor{green}{7} & $\rightarrow$ & \textcolor{red}{8} \\
+&&$\uparrow$&&&& \\
+9 & & \textcolor{red}{10} & & 11 &  & 12 \\
+&&$\uparrow$&&&& \\
+13 & & \textcolor{red}{14} &$\leftarrow$& \textcolor{red}{15} &$\leftarrow$& \textcolor{blue}{16} \\
+\hline
+\end{tabular}
+\end{center}
+
+
+\end{document}
